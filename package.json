@@ -1,22 +1,26 @@
 {
-  "name": "juff",
+  "name": "iterm2-plot",
   "version": "0.0.0",
   "decription": "",
   "main": "lib/index.js",
   "files": [
+    "bin/*",
     "lib/*"
   ],
+  "bin": {
+    "iterm2-plot": "bin/iterm2-plot.js"
+  },
   "type": "module",
   "keywords": [],
   "author": "Joe Hildebrand <joe-github@cursive.net>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hildjj/juff.git"
+    "url": "git+https://github.com/hildjj/iterm2-plot.git"
   },
-  "homepage": "https://github.com/hildjj/juff#readme",
+  "homepage": "https://github.com/hildjj/iterm2-plot#readme",
   "bugs": {
-    "url": "https://github.com/hildjj/juff/issues"
+    "url": "https://github.com/hildjj/iterm2-plot/issues"
   },
   "scripts": {
     "clean": "rm -rf coverage docs lib",

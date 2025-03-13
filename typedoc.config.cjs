@@ -6,8 +6,8 @@ module.exports = {
   out: 'docs',
   cleanOutputDir: true,
   sidebarLinks: {
-    GitHub: 'https://github.com/hildjj/hildjj/juff/',
-    Documentation: 'http://hildjj.github.io/juff/',
+    GitHub: 'https://github.com/hildjj/hildjj/iterm2-plot/',
+    Documentation: 'http://hildjj.github.io/iterm2-plot/',
   },
   navigation: {
     includeCategories: false,

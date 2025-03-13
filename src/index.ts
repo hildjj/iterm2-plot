@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import {getTerminalSize} from 'iterm2-size';
 import gnuplot from 'gnuplot-wasm';
 import terminalImage from 'term-img';
+import {text} from 'node:stream/consumers';
 
 export interface PlotOptions {
   files: string[]; // "-" for stdin
@@ -48,7 +49,12 @@ export async function plot(opts: PlotOptions): Promise<string> {
 
   let txt = '';
   for (const f of opts.files) {
-    txt += await fs.readFile((f === '-') ? '/dev/stdin' : f, 'utf8');
+    if (f === '-') {
+      txt += await text(process.stdin);
+    } else {
+      txt += await fs.readFile(f, 'utf8');
+    }
+
     // let x = opts.x ? null : 0;
     // let max_col = 0;
     // let col_offset = 0;
