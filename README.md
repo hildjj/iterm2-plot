@@ -17,4 +17,4 @@ Example:
 
 ---
 [![Build Status](https://github.com/hildjj/iterm2-plot/workflows/Tests/badge.svg)](https://github.com/hildjj/iterm2-plot/actions?query=workflow%3ATests)
-[![codecov](https://codecov.io/gh/hildjj/iterm2-plot/branch/main/graph/badge.svg?token=N7B7YLIDM4)](https://codecov.io/gh/hildjj/iterm2-plot)
+[![codecov](https://codecov.io/gh/hildjj/iterm2-plot/graph/badge.svg?token=51CF2NR7A8)](https://codecov.io/gh/hildjj/iterm2-plot)
