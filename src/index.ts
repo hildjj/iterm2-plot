@@ -5,16 +5,22 @@ import gnuplot from 'gnuplot-wasm';
 import terminalImage from 'term-img';
 import {text} from 'node:stream/consumers';
 
+const {render} = await gnuplot();
+
 export interface PlotOptions {
   files: string[]; // "-" for stdin
   dimensions?: string; // WxH
   x?: boolean; // Treat first column as X for all following Y columns
+  output?: string | null;
+  log?: 'x' | 'y' | 'xy' | null;
 }
 
 const DEFAULT_PLOT_OPTIONS: Required<PlotOptions> = {
   files: ['-'],
   dimensions: '0x0',
   x: false,
+  output: null,
+  log: null,
 };
 
 interface WH {
@@ -45,47 +51,27 @@ export async function plot(opts: PlotOptions): Promise<string> {
     ...DEFAULT_PLOT_OPTIONS,
     ...opts,
   };
-  // const pointsByCol: Point[][] = [];
+  const data: {
+    [filename: string]: string;
+  } = Object.create(null);
+  const cols: {
+    [filename: string]: number;
+  } = Object.create(null);
 
-  let txt = '';
   for (const f of opts.files) {
-    if (f === '-') {
-      txt += await text(process.stdin);
-    } else {
-      txt += await fs.readFile(f, 'utf8');
-    }
+    const fn = (f === '-') ? 'stdin' : f.replaceAll('/', '__');
+    const txt = (f === '-') ?
+      await text(process.stdin) :
+      await fs.readFile(f, 'utf8');
 
-    // let x = opts.x ? null : 0;
-    // let max_col = 0;
-    // let col_offset = 0;
-    // for (const line of txt.split(os.EOL)) {
-    //   if (line.length === 0) {
-    //     // Reset x on blank line
-    //     x = opts.x ? null : 0;
-    //     col_offset = max_col;
-    //     continue;
-    //   }
-    //   const nums = line.split(/[^0-9._-]/).map(n => parseFloat(n));
-    //   if (opts.x) {
-    //     x = nums.shift() ?? NaN;
-    //   }
-    //   let col = 0;
-    //   for (const y of nums) {
-    //     assert(typeof x === 'number');
-    //     let pm = pointsByCol[col];
-    //     if (!pm) {
-    //       pm = [];
-    //       pointsByCol[col] = pm;
-    //     }
-    //     pm.push(new Point(x, y));
-    //     col++;
-    //   }
-    //   max_col = Math.max(max_col, nums.length + col_offset);
-    //   if (!opts.x) {
-    //     assert(x !== null);
-    //     x++;
-    //   }
-    // }
+    // Blank lines.
+    for (const [i, chunk] of txt.split('\n\n').entries()) {
+      if (chunk) {
+        const cn = `${fn}-${i}`;
+        data[cn] = chunk;
+        cols[cn] = Math.max(...chunk.split('\n').map(line => line.split(/\s+/g).length));
+      }
+    }
   }
 
   let {width, height} = toInt(opts.dimensions?.match(/^(?<width>\d+)x(?<height>\d+)/)?.groups);
@@ -97,13 +83,40 @@ export async function plot(opts: PlotOptions): Promise<string> {
     height = (height === 0) ? th : height;
   }
 
-  const script = `
-    set key off
-    set term svg size ${width}, ${height} font "sans,28" background rgb "gray90" lw 4 rounded
-
-    plot 'txt' using 0:1 with linespoints pi -1
+  let script = `
+set key off
+set term svg size ${width}, ${height} font "sans,28" background rgb "gray90" lw 4 rounded
 `;
-  const {render} = await gnuplot();
-  const {svg} = render(script, {data: {txt}});
+  if (opts.log?.includes('x')) {
+    script += 'set logscale x\n';
+  }
+  if (opts.log?.includes('y')) {
+    script += 'set logscale y\n';
+  }
+  script += 'plot';
+  let first = true;
+  for (const f of Object.keys(data)) {
+    const numCols = cols[f] ?? 0;
+    for (let col = (opts.x ? 2 : 1); col <= numCols; col++) {
+      if (first) {
+        first = false;
+      } else {
+        script += ',';
+      }
+      script += ` "${f}" using ${opts.x ? `1:${col}` : `0:${col}`} with linespoints`;
+    }
+  }
+  script += '\n';
+
+  const {svg, stdout} = render(script, {data});
+
+  if (stdout) {
+    return stdout;
+  }
+
+  if (opts.output) {
+    await fs.writeFile(opts.output, svg, 'utf8');
+    return '';
+  }
   return terminalImage(Buffer.from(svg));
 }

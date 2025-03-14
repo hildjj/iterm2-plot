@@ -12,8 +12,8 @@ importers:
         specifier: 13.1.0
         version: 13.1.0
       gnuplot-wasm:
-        specifier: 0.0.1
-        version: 0.0.1
+        specifier: 0.1.0
+        version: 0.1.0
       iterm2-size:
         specifier: 0.0.1
         version: 0.0.1
@@ -216,8 +216,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@eslint-community/eslint-utils@4.5.0':
-    resolution: {integrity: sha512-RoV8Xs9eNwiDvhv7M+xcL4PWyRyIXRY/FLp3buU4h1EYfdF7unWUy3dOjPqb3C7rMUewIcqwW850PgS8h1o1yg==}
+  '@eslint-community/eslint-utils@4.5.1':
+    resolution: {integrity: sha512-soEIOALTfTK6EjmKMMoLugwaP0rzkad90iIWd1hMO9ARkSAyjfMfkRRhLvD5qH7vvM0Cg72pieUfR6yh6XxC4w==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
@@ -879,8 +879,8 @@ packages:
     resolution: {integrity: sha512-iInW14XItCXET01CQFqudPOWP2jYMl7T+QRQT+UNcR/iQncN/F0UNpgd76iFkBPgNQb4+X3LV9tLJYzwh+Gl3A==}
     engines: {node: '>=18'}
 
-  gnuplot-wasm@0.0.1:
-    resolution: {integrity: sha512-hXxshGwNXaTuPk/rC6+xgrc/LbBwk7fagcra1i0YVRSXSv6qbHL05l9r70S5qTLkqi/VWZaNOW3s70VWP5qgxg==}
+  gnuplot-wasm@0.1.0:
+    resolution: {integrity: sha512-1Ud4tea/J9qQa1Mt7JzSa59v7gPYRP1jLVzgFCpyG44V+wVYOUL2rDt/IqU8OCNlW+Y41KIcdoJGqLptXixyZg==}
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
@@ -1562,7 +1562,7 @@ snapshots:
   '@esbuild/win32-x64@0.25.1':
     optional: true
 
-  '@eslint-community/eslint-utils@4.5.0(eslint@9.22.0)':
+  '@eslint-community/eslint-utils@4.5.1(eslint@9.22.0)':
     dependencies:
       eslint: 9.22.0
       eslint-visitor-keys: 3.4.3
@@ -1849,7 +1849,7 @@ snapshots:
 
   '@typescript-eslint/utils@8.26.1(eslint@9.22.0)(typescript@5.8.2)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.0(eslint@9.22.0)
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.22.0)
       '@typescript-eslint/scope-manager': 8.26.1
       '@typescript-eslint/types': 8.26.1
       '@typescript-eslint/typescript-estree': 8.26.1(typescript@5.8.2)
@@ -2049,7 +2049,7 @@ snapshots:
 
   eslint-plugin-es-x@7.8.0(eslint@9.22.0):
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.0(eslint@9.22.0)
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.22.0)
       '@eslint-community/regexpp': 4.12.1
       eslint: 9.22.0
       eslint-compat-utils: 0.5.1(eslint@9.22.0)
@@ -2080,7 +2080,7 @@ snapshots:
 
   eslint-plugin-n@17.15.1(eslint@9.22.0):
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.0(eslint@9.22.0)
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.22.0)
       enhanced-resolve: 5.18.1
       eslint: 9.22.0
       eslint-plugin-es-x: 7.8.0(eslint@9.22.0)
@@ -2106,7 +2106,7 @@ snapshots:
 
   eslint@9.22.0:
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.0(eslint@9.22.0)
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.22.0)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.19.2
       '@eslint/config-helpers': 0.1.0
@@ -2255,7 +2255,7 @@ snapshots:
 
   globals@16.0.0: {}
 
-  gnuplot-wasm@0.0.1: {}
+  gnuplot-wasm@0.1.0: {}
 
   graceful-fs@4.2.11: {}
 

@@ -1,4 +1,4 @@
-declare module 'gnuplot-wasm';
+declare module 'gnuplot-wasm' {
 
 export interface InitOptions {
   noInitialRun?: boolean;
@@ -29,3 +29,5 @@ export default function init(options?: InitOptions): Promise<{
   };
   _gnuplot: any;
 }>;
+
+}

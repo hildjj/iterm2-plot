@@ -4,4 +4,6 @@
 import {cli} from '../lib/cli.js';
 
 const out = await cli();
-console.log(out);
+if (out) {
+  console.log(out);
+}
