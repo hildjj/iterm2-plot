@@ -45,10 +45,20 @@ Options:
   -l, --log <axes>              Set X, Y, and/or count to log scale (choices:
                                 "x", "y", "xy")
   -o, --output <filename>       Output svg to file instead of chart on stdout
+  -s, --shrink <CxR>            Shrink output by columns or rows (default:
+                                "1x3")
   -x                            Treat first column as X for all following Y
                                 columns (default: use row count)
   -h, --help                    display help for command
 ```
+
+Each file will be plotted as a separate set of lines.  If a blank line exists
+in a file, a new set of lines will be started at that point.  Use `cat` to
+combine files if needed.
+
+File chunks will be processed according to gnuplot
+[rules](http://www.gnuplot.info/docs_6.0/loc11372.html), with all defaults
+taken.
 
 ## API
 
