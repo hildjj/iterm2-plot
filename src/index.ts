@@ -8,19 +8,64 @@ import {text} from 'node:stream/consumers';
 const {render} = await gnuplot();
 
 export interface PlotOptions {
-  files: string[]; // "-" for stdin
+  /**
+   * List of file names to read, relative to the working directory.
+   * Use "-" for stdin.
+   */
+  files: string[];
+
+  /**
+   * Background color for graph.
+   */
+  background?: string;
+
+  /**
+   * A string of the form <number>x<number> for width and height.
+   * Example: "1000x500".
+   */
   dimensions?: string; // WxH
-  x?: boolean; // Treat first column as X for all following Y columns
+
+  /**
+   * If true, treat first column as X, following columns as Ys.  If falsy,
+   * X is autoincremented from 0 for each line, and each column is a Y value
+   * at that X.
+   */
+  x?: boolean;
+
+  /**
+   * If given, write output to the given file name relative to the working
+   * directory, and make the result of plot an empty string.
+   */
   output?: string | null;
-  log?: 'x' | 'y' | 'xy' | null;
+
+  /**
+   * Use a logarithmic scale for the given axes.  Linear for both x and y if
+   * null.
+   */
+  log?: 'x' | 'y' | 'xy' | '' | null;
+
+  /**
+   * Useful for debugging only.  Ouptut the generated gnuplot script to the
+   * given file if specified.
+   */
+  scriptOut?: string | null;
+
+  /**
+   * A string of the form <number>x<number> for columns and rows.
+   * Shrink by columns and rows.
+   */
+  shrink?: string;
 }
 
-const DEFAULT_PLOT_OPTIONS: Required<PlotOptions> = {
+export const DEFAULT_PLOT_OPTIONS: Required<PlotOptions> = {
   files: ['-'],
+  background: 'gray90',
   dimensions: '0x0',
   x: false,
   output: null,
   log: null,
+  scriptOut: null,
+  shrink: '1x3',
 };
 
 interface WH {
@@ -28,9 +73,8 @@ interface WH {
   height: number;
 }
 
-function toInt(groups?: {
-  [key: string]: string;
-}): WH {
+function toInt(xByY?: string): WH {
+  const groups = xByY?.match(/^(?<width>\d+)x(?<height>\d+)/)?.groups;
   if (!groups) {
     return {width: 0, height: 0};
   }
@@ -74,18 +118,20 @@ export async function plot(opts: PlotOptions): Promise<string> {
     }
   }
 
-  let {width, height} = toInt(opts.dimensions?.match(/^(?<width>\d+)x(?<height>\d+)/)?.groups);
-  if ((width === 0) || (height === 0)) {
+  let {width, height} = toInt(opts.dimensions);
+  if ((width === 0) || (height === 0) || isNaN(width) || isNaN(height)) {
+    const {width: columns, height: rows} = toInt(opts.shrink);
+
     // Only do this if needed, so tests can pass.
     const {width: tw, height: th} =
-      await getTerminalSize({rows: -3, columns: -1});
-    width = (width === 0) ? tw : width;
-    height = (height === 0) ? th : height;
+      await getTerminalSize({rows: -rows, columns: -columns});
+    width = ((width === 0) || isNaN(width)) ? tw : width;
+    height = ((height === 0) || isNaN(height)) ? th : height;
   }
 
-  let script = `
+  let script = `\
 set key off
-set term svg size ${width}, ${height} font "sans,28" background rgb "gray90" lw 4 rounded
+set term svg size ${width}, ${height} font "sans,28" background rgb "${opts.background}" lw 4 rounded
 `;
   if (opts.log?.includes('x')) {
     script += 'set logscale x\n';
@@ -108,6 +154,9 @@ set term svg size ${width}, ${height} font "sans,28" background rgb "gray90" lw 
   }
   script += '\n';
 
+  if (opts.scriptOut) {
+    await fs.writeFile(opts.scriptOut, script, 'utf8');
+  }
   const {svg, stdout} = render(script, {data});
 
   if (stdout) {
