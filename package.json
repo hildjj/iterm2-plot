@@ -1,6 +1,6 @@
 {
   "name": "iterm2-plot",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "decription": "",
   "main": "lib/index.js",
   "files": [
