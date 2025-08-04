@@ -43,7 +43,7 @@ export async function cli(argv?: readonly string[]): Promise<string> {
       new Option('--scriptOut <filename>', 'Output gnuplot to file')
         .hideHelp(true)
     )
-    .action(async(files, opts) => {
+    .action(async (files, opts) => {
       ret = await plot({...opts, files});
     });
 
