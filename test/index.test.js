@@ -11,11 +11,11 @@ const col2 = fileURLToPath(new URL('./fixtures/2cols', import.meta.url));
 
 const tmp = await mkdtemp(join(tmpdir(), 'iterm2-plot-'));
 
-after(async() => {
+after(async () => {
   await rm(tmp, {recursive: true});
 });
 
-test('wc', async() => {
+test('wc', async () => {
   const output = join(tmp, '1.svg');
   const s = await plot({
     files: [wc],
@@ -26,7 +26,7 @@ test('wc', async() => {
   assert.match(await readFile(output, 'utf8'), /^<\?xml/);
 });
 
-test('2cols', async() => {
+test('2cols', async () => {
   const output = join(tmp, '1.svg');
   assert.equal(await plot({
     files: [col2],
